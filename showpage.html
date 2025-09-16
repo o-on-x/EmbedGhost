@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Custom Post Embed Demo (Dark)</title>
+  <style>
+    body {
+      background: #15202b;
+      font-family: "Segoe UI", "Arial", sans-serif;
+      margin: 2em;
+      color: #d9d9d9;
+    }
+    .x-card {
+      background: #22303c;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.16);
+      max-width: 550px;
+      margin: 2em auto;
+      border: 1px solid #38444d;
+      padding: 24px 24px 16px 24px;
+      color: #e6ecf0;
+    }
+    .profile-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .profile-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid #38444d;
+      object-fit: cover;
+      margin-right: 12px;
+      background: #192734;
+    }
+    .tweet-user {
+      font-weight: bold;
+      font-size: 17px;
+      color: #e6ecf0;
+    }
+    .tweet-user span {
+      color: #8899a6;
+      font-size: 15px;
+      font-weight: normal;
+      margin-left: 8px;
+    }
+    .tweet-text {
+      font-size: 19px;
+      color: #e6ecf0;
+      line-height: 1.4;
+      margin-bottom: 8px;
+      white-space: pre-line;
+      word-break: break-word;
+    }
+    .tweet-date {
+      font-size: 13px;
+      color: #8899a6;
+      margin-bottom: 10px;
+    }
+    .tweet-media {
+      margin-top: 12px;
+      margin-bottom: 8px;
+    }
+    .tweet-media img, .tweet-media video {
+      background: #192734;
+      max-width: 100%;
+      border-radius: 16px;
+      margin: 0.5em 0;
+      display: block;
+      box-shadow: 0 0 12px rgba(0,0,0,0.24);
+    }
+    .yt-card {
+      background: #232b34;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.13);
+      max-width: 550px;
+      margin: 2em auto;
+      border: 1px solid #38444d;
+      padding: 24px 24px 18px 24px;
+      color: #e6ecf0;
+      text-align: center;
+    }
+    .yt-title {
+      font-size: 19px;
+      color: #b3e3ff;
+      font-weight: bold;
+      padding-bottom: 8px;
+    }
+    .yt-thumb {
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      box-shadow: 0 1px 6px rgba(0,0,0,.13);
+      border: 1px solid #38444d;
+      background: #192734;
+    }
+    .yt-stream-label {
+      color: #73b3e7;
+      font-size: 15px;
+      margin-bottom: 4px;
+      margin-top: 0.5em;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+    .yt-card video {
+      background: #1d2731;
+      border-radius: 12px;
+      max-width: 100%;
+      box-shadow: 0 0 8px #121b23;
+      border: 1px solid #38444d;
+      margin: 8px 0 0 0;
+    }
+    .actions-row {
+      display: flex;
+      gap: 24px;
+      font-size: 18px;
+      margin-top: 4px;
+      margin-left: 60px;
+      padding-top: 2px;
+    }
+    .action-icon {
+      width: 20px; height: 20px; vertical-align: middle; margin-right: 6px; background: none; filter: brightness(2) grayscale(100%);
+    }
+    .action-icon.heart { filter: none; }
+    .action-item { display: flex; align-items: center; gap: 2px; }
+    .count { color: #8899a6; font-weight: bold; font-size: 15px; }
+    .input-row {
+      display: flex; justify-content: center; gap: 8px; margin-bottom: 18px;
+    }
+    .tweet-link {
+      color: #1da1f2;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    input[type="text"] {
+      background: #192734;
+      color: #e6ecf0;
+      border-radius: 6px;
+      border: 1px solid #38444d;
+      padding: 0.6em;
+    }
+    input[type="text"]:focus {
+      border-color: #1da1f2;
+      outline: none;
+    }
+    button {
+      padding: 0.6em 1em;
+      border-radius: 6px;
+      border: 1px solid #1da1f2;
+      background: #1da1f2;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:active, button:focus {
+      background: #178cd3;
+      outline: none;
+    }
+    h2 {
+      text-align: center;
+      font-size: 28px;
+      color: #e6ecf0;
+      letter-spacing: -1px;
+      margin-bottom: 0.25em;
+    }
+    .quote-card {
+      background: #1d2731;
+      border: 1px solid #38444d;
+      border-radius: 14px;
+      margin: 14px 0 0 0;
+      padding: 14px 14px 7px 14px;
+      box-shadow: 0 1px 6px rgba(0,0,0,.10);
+    }
+    .quote-stack .quote-card { margin-left: 24px; margin-top: 18px; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+</head>
+<body>
+  <h2>Custom Post Embed Demo</h2>
+  <div class="input-row">
+    <input type="text" id="xUrl" placeholder="Paste X (Twitter) or YouTube post URL here">
+    <button onclick="showPost()">Show Post</button>
+  </div>
+  <div id="tweetDisplay"></div>
+  <script>
+    function linkify(text) {
+      return text
+        .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="tweet-link">$1</a>')
+        .replace(/@([A-Za-z0-9_]{1,15})/g, '<a href="https://x.com/$1" target="_blank" class="tweet-link">@$1</a>');
+    }
+
+    function renderTweet(data, isQuote=false, depth=0) {
+      if (depth > 10) return "";
+      let defaultAvatar = "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png";
+      let cardClass = isQuote ? "quote-card" : "x-card";
+      let html = `<div class="${isQuote ? 'quote-stack' : ''}">
+        <div class="${cardClass}">
+          <div class="profile-row">
+            <img class="profile-img" src="${data.profile_image || defaultAvatar}" alt="profile">
+            <span class="tweet-user">@${data.user} <span>· X</span></span>
+          </div>
+          <div class="tweet-text">${linkify(data.full_text)}</div>
+          <div class="tweet-date">${data.created_at}</div>
+          <div class="tweet-media">`;
+      if (data.media && data.media.length) {
+        data.media.forEach(url => {
+          if (url.endsWith('.jpg') || url.endsWith('.png')) html += `<img src="${url}" loading="lazy">`;
+          else html += `<video src="${url}" controls preload="metadata"></video>`;
+        });
+      }
+      html += `</div>
+        <div class="actions-row">
+          <span class="action-item">
+            <img class="action-icon heart" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/2764.svg" title="Like">
+            <span class="count">${data.like_count ?? 0}</span>
+          </span>
+          <span class="action-item">
+            <img class="action-icon" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f501.svg" title="Retweet">
+            <span class="count">${data.retweet_count ?? 0}</span>
+          </span>
+          <span class="action-item">
+            <img class="action-icon" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f516.svg" title="Bookmark">
+            <span class="count">${data.bookmark_count ?? 0}</span>
+          </span>
+          <span class="action-item" title="Views">
+            <img class="action-icon" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f441.svg">
+            <span class="count">${data.view_count ?? 0}</span>
+          </span>
+        </div>`;
+      if (data.quote && typeof data.quote === "object") {
+        html += renderTweet(data.quote, true, depth+1);
+      }
+      html += `</div></div>`;
+      return html;
+    }
+    function renderYouTube(data) {
+      let label = data.title ? `<div class="yt-title">${data.title}</div>` : "";
+      let poster = data.thumbnail ? `poster="${data.thumbnail}"` : "";
+      return `<div class="yt-card">
+        ${label}
+        <div class="yt-stream-label">YouTube Video (privacy mode – played via yt-dlp):</div>
+        <video controls preload="metadata" ${poster} src="${data.stream_url}" style="width:100%;max-width:500px;"></video>
+        <div style="margin-top: 10px;">
+          <a href="${data.youtube_url}" target="_blank" class="tweet-link">Open on YouTube</a>
+        </div>
+      </div>`;
+    }
+
+
+    function renderRumble(data) {
+  let label = data.title ? `<div class="yt-title">${data.title}</div>` : "";
+  let poster = data.thumbnail ? `poster="${data.thumbnail}"` : "";
+  let vidId = `rumblevid_${Math.random().toString(36).slice(2)}`; // Unique id
+  // hls.js setup will run after insertion
+  setTimeout(() => {
+    setupHLSPlayer(vidId, data.stream_url, data.thumbnail);
+  }, 100);
+  return `<div class="yt-card">
+    ${label}
+    <div class="yt-stream-label">Rumble Video (privacy mode – played via yt-dlp):</div>
+    <video id="${vidId}" controls preload="metadata" ${poster} style="width:100%;max-width:500px;"></video>
+    <div style="margin-top: 10px;">
+      <a href="${data.rumble_url}" target="_blank" class="tweet-link">Open on Rumble</a>
+    </div>
+  </div>`;
+}
+
+function setupHLSPlayer(vidId, streamUrl, posterUrl) {
+  const video = document.getElementById(vidId);
+  video.addEventListener('error', function(e) {
+  console.error('MediaError:', video.error.code, video.error.message);
+});
+
+
+  if (!video) return;
+  if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    // Native HLS support (Safari, iOS)
+    video.src = streamUrl;
+  } else if (window.Hls) {
+    // Use hls.js for browser playback
+    const hls = new Hls();
+    hls.on(Hls.Events.ERROR, function(event, data) {
+  console.error('HLS Error:', data);
+});
+
+    hls.loadSource(streamUrl);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      if (posterUrl) video.setAttribute("poster", posterUrl);
+    });
+    // Cleanup if needed (e.g. if you re-render)
+  } else {
+    // If hls.js isn't loaded, fallback (may not work)
+    video.src = streamUrl;
+  }
+  
+}
+
+
+
+
+    async function showPost() {
+  const url = document.getElementById('xUrl').value.trim();
+  if (!url) return;
+  const response = await fetch(`/api/tweet?url=${encodeURIComponent(url)}`);
+  const data = await response.json();
+  if (data.type === "x") {
+    document.getElementById('tweetDisplay').innerHTML = renderTweet(data);
+  } else if (data.type === "youtube") {
+    document.getElementById('tweetDisplay').innerHTML = renderYouTube(data);
+  } else if (data.type === "rumble") {
+    document.getElementById('tweetDisplay').innerHTML = renderRumble(data);
+  } else {
+    document.getElementById('tweetDisplay').innerHTML = `<div style="color:#e96868;font-size:16px;">Unrecognized post type or failed to fetch.</div>`;
+  }
+}
+
+  </script>
+</body>
+</html>
